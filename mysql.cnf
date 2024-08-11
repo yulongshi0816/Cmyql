@@ -1,0 +1,10 @@
+# 数据库连接池的配置文件
+ip=localhost
+port=3306
+username=root
+passwd=shiyulong
+dbname=chat
+initSize=10
+maxSize=1024
+maxIdleTime=60
+maxConnectionTimeOut=100

@@ -1,0 +1,23 @@
+# ninja log v6
+3	131	1723129567754511464	build.ninja	2e09f29df495ffcc
+14	1286	1723129410067312944	CMakeFiles/mysqlLearn.dir/main.cpp.o	a779ba568daf38
+1256	1372	1723129532733603109	mysqlLearn	19a9b2c65e27e5ed
+6	1256	1723129531483736170	CMakeFiles/mysqlLearn.dir/CommonConnectionPool.cpp.o	18c1e0a549f55005
+10	1262	1723126507213259877	CMakeFiles/mysqlLearn.dir/Connection.cpp.o	5edb5ad877eea2c4
+4	118	1723129567754511464	build.ninja	2e09f29df495ffcc
+4	118	1723129567781873568	mysqlLearn	19a9b2c65e27e5ed
+16	1701	1723129699770186853	CMakeFiles/mysqlLearn.dir/CommonConnectionPool.cpp.o	18c1e0a549f55005
+1701	1814	1723129701455355570	mysqlLearn	19a9b2c65e27e5ed
+6	1536	1723129715450835906	CMakeFiles/mysqlLearn.dir/CommonConnectionPool.cpp.o	18c1e0a549f55005
+5	1029	1723129733970051352	CMakeFiles/mysqlLearn.dir/CommonConnectionPool.cpp.o	18c1e0a549f55005
+1029	1129	1723129734993966807	mysqlLearn	19a9b2c65e27e5ed
+3	1082	1723129757482940927	CMakeFiles/mysqlLearn.dir/CommonConnectionPool.cpp.o	18c1e0a549f55005
+1082	1154	1723129758561588068	mysqlLearn	19a9b2c65e27e5ed
+12	1338	1723130393402425741	CMakeFiles/mysqlLearn.dir/CommonConnectionPool.cpp.o	18c1e0a549f55005
+1338	1427	1723130394728735615	mysqlLearn	19a9b2c65e27e5ed
+13	1630	1723131328538234800	CMakeFiles/mysqlLearn.dir/Connection.cpp.o	5edb5ad877eea2c4
+12	1638	1723131328536856515	CMakeFiles/mysqlLearn.dir/main.cpp.o	a779ba568daf38
+7	1189	1723131368054756566	CMakeFiles/mysqlLearn.dir/Connection.cpp.o	5edb5ad877eea2c4
+6	1267	1723131368053730357	CMakeFiles/mysqlLearn.dir/main.cpp.o	a779ba568daf38
+3	1086	1723131384982499485	CMakeFiles/mysqlLearn.dir/CommonConnectionPool.cpp.o	18c1e0a549f55005
+1087	1177	1723131386065983680	mysqlLearn	19a9b2c65e27e5ed

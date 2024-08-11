@@ -1,0 +1,3 @@
+/Users/long/CLionProjects/mysqlLearn/cmake-build-debug/CMakeFiles/mysqlLearn.dir
+/Users/long/CLionProjects/mysqlLearn/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/long/CLionProjects/mysqlLearn/cmake-build-debug/CMakeFiles/rebuild_cache.dir
