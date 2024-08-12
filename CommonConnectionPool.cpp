@@ -21,7 +21,7 @@ bool ConnectionPool::loadConfigFile() {
         return false;
     }
 
-    while (feof(pf)) {
+    while (!feof(pf)) {
         char line[1024] = {0};
         fgets(line, 1024, pf);
         string str = line;
