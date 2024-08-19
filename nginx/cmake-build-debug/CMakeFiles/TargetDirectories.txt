@@ -1,0 +1,3 @@
+/Users/long/CLionProjects/ngx_pool/cmake-build-debug/CMakeFiles/ngx_pool.dir
+/Users/long/CLionProjects/ngx_pool/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/long/CLionProjects/ngx_pool/cmake-build-debug/CMakeFiles/rebuild_cache.dir
