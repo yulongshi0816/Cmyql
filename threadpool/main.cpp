@@ -20,7 +20,7 @@ public:
     MyTask(int begin, int end): begin_(begin), end_(end) {
 
     }
-    Any run() override{
+    Any run() {
         std::cout << "tid: " << std::this_thread::get_id() << "start this task..." << std::endl;
         int sum = 0;
         for(int i = begin_; i <=end_; ++i) {
@@ -34,14 +34,21 @@ private:
     int end_;
 };
 int main() {
+    // threadpool西沟后，回收线程资源；
     ThreadPool pool;
-    pool.start(4);
-    Result res = pool.subMitTask(std::make_shared<MyTask>());
-    int sum = res.get().cast_<int>();
-    pool.subMitTask(std::make_shared<MyTask>());
-    pool.subMitTask(std::make_shared<MyTask>());
-    pool.subMitTask(std::make_shared<MyTask>());
+    pool.setMode(PoolMode::MODE_CACHD);
+    // 用户设置线程池方法
+    pool.start(3);
+    Result res1 = pool.subMitTask(std::make_shared<MyTask>(1, 100));
+    Result res2 = pool.subMitTask(std::make_shared<MyTask>(1, 1000));
+    Result res3 = pool.subMitTask(std::make_shared<MyTask>(1, 100));
 
-    getchar();
+    pool.subMitTask(std::make_shared<MyTask>(1, 1000));
+
+    int sum1 = res1.get().cast_<int>();
+    int sum2 = res2.get().cast_<int>();
+    int sum3 = res3.get().cast_<int>();
+    std::cout << "ans is " << (sum1 + sum2 + sum3) << std::endl;
+
     return 0;
 }

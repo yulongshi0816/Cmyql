@@ -15,6 +15,9 @@
 #include <condition_variable>
 #include <thread>
 #include <iostream>
+#include <unordered_map>
+
+static std::mutex *mutex = new std::mutex;
 
 // Any类型，可以接受任一类型的数据
 class Any {
@@ -27,7 +30,7 @@ public:
     Any& operator=(Any&&) = default;
     // 这个构造函数可以让Any接收任一其他的数据
     template<typename T>
-    Any(T data) :base_(std::make_shared<Derive<T>>(data)){
+    Any(T data) : base_(std::make_unique<Derive<T>>(data)){
 
     }
     // 这个方法用来提取数据
@@ -83,11 +86,32 @@ private:
     int resLimit_;
     std::condition_variable cond_;
 };
+class Task;
+// 实现接收到提交到线程池的task任务执行完成后的返回值类型Result
+class Result{
+public:
+    Result(std::shared_ptr<Task> task, bool isVaild = true);
+    ~Result() = default;
+    // setVal方法获取任务执行完的返回值
+    void setVal(Any any);
+    // get方法用户调用获取task的返回值
+    Any get();
+private:
+    Any any_; // 存储任务的返回值；
+    Semaphore sem_; // 线程通信的信号量
+    std::shared_ptr<Task> task_; // 指向对应获取返回值的任务对象；
+    std::atomic_bool isValid_; // 返回值是否有效
+};
 // 任务抽象基类
 class Task {
 public:
+    Task():result_(nullptr){}
+    void exec();
+    void setResult(Result* res);
     // 用户可以自定义任一任务类型，从Task继承，重写run方法
     virtual Any run() = 0;
+private:
+    Result *result_;
 };
 //线程池支持的模式
 enum class PoolMode{
@@ -99,13 +123,16 @@ enum class PoolMode{
 class Thread{
 public:
     // 线程函数对象类型
-    using ThreadFunc = std::function<void()>;
+    using ThreadFunc = std::function<void(int)>;
     Thread(ThreadFunc func);
     ~Thread();
 public:
     void start();
+    int getId() const;
 private:
     ThreadFunc func_;
+    static int generateID_;
+    int threadID_; // 保存线程id
 };
 /*ThreadPool pool;
  * pool.start(4);
@@ -122,16 +149,22 @@ public:
     ~ThreadPool();
     void start(int initThreadSize = 4); //开启线程池
     void setMode(PoolMode mode); // 设置线程池模式
+    void setThreadSizeThreshHold(int threshold);
     void setTaskQueueMaxThreadHold(int threadhold); // 设置task任务队列上限的阈值
-    void subMitTask(const std::shared_ptr<Task>& sp); // 提交任务
+    Result subMitTask(const std::shared_ptr<Task>& sp); // 提交任务
     ThreadPool(const ThreadPool&) = delete;
     ThreadPool& operator=(const ThreadPool&) = delete;
 private:
     //定义线程函数
-    void threadFunc();
+    void threadFunc(int threadid);
+    // 检查pool的运行状态
+    bool checkRunningStat() const;
 private:
-    std::vector<std::unique_ptr<Thread>> threads_; // 线程列表
+    //std::vector<std::unique_ptr<Thread>> threads_; // 线程列表
+    std::unordered_map<int, std::unique_ptr<Thread>> threads_; // 线程列表
     int initThreadSize_; //初始线程数量
+    int threadSizeThreshHold_; // 线程数量上限的阈值
+    std::atomic_int curThreadSize_; //     记录当前的线程总数量
     std::queue<std::shared_ptr<Task>> taskQue_; // 任务队列
     std::atomic_uint taskSize_; // 任务数量
     int taskQueMaxThreadHold_;// 任务队列上限阈值
@@ -139,6 +172,8 @@ private:
     std::condition_variable notFull_; // 任务队列不满
     std::condition_variable noEmpty_; // 任务队列不空
     PoolMode mode_;
+    std::atomic_bool isPoolRunning_; //表示线程池的启动状态；
+    std::atomic_int idleThreadSize_; //空闲线程的数量
 
 };
 #endif //THREADPOOL_THREADPOOL_H
