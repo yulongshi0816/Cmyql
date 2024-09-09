@@ -22,6 +22,7 @@ public:
     }
     Any run() {
         std::cout << "tid: " << std::this_thread::get_id() << "start this task..." << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(2));
         int sum = 0;
         for(int i = begin_; i <=end_; ++i) {
             sum += i;
@@ -38,17 +39,17 @@ int main() {
     ThreadPool pool;
     pool.setMode(PoolMode::MODE_CACHD);
     // 用户设置线程池方法
-    pool.start(3);
+    pool.start(4);
     Result res1 = pool.subMitTask(std::make_shared<MyTask>(1, 100));
     Result res2 = pool.subMitTask(std::make_shared<MyTask>(1, 1000));
     Result res3 = pool.subMitTask(std::make_shared<MyTask>(1, 100));
 
-    pool.subMitTask(std::make_shared<MyTask>(1, 1000));
+//    Result res4 = pool.subMitTask(std::make_shared<MyTask>(1, 1000));
 
     int sum1 = res1.get().cast_<int>();
     int sum2 = res2.get().cast_<int>();
     int sum3 = res3.get().cast_<int>();
     std::cout << "ans is " << (sum1 + sum2 + sum3) << std::endl;
-
+    getchar();
     return 0;
 }
