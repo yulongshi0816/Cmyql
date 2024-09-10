@@ -64,12 +64,16 @@ private:
 // 实现信号量类
 class Semaphore{
 public:
-    Semaphore(int limit = 0):resLimit_(limit){
+    Semaphore(int limit = 0):resLimit_(limit), isExit_(false){
 
     }
-    ~Semaphore() = default;
+    ~Semaphore() {
+        isExit_ = true;
+    }
     // 获取信号量资源
     void wait(){
+        if(isExit_)
+            return;
         std::unique_lock<std::mutex> lock(mtx_);
         // 等待信号量
         cond_.wait(lock, [&](){return resLimit_ > 0;});
@@ -77,11 +81,15 @@ public:
     }
     // 增加一个信号量资源
     void post(){
+        if(isExit_)
+            return;
         std::unique_lock<std::mutex> lock(mtx_);
         resLimit_++;
-        cond_.notify_all();
+        // linux下的析构没做任何事情，导致这个地方状态失效
+        cond_.notify_all(); // 通知条件变量wait的地方，可以起来干活
     }
 private:
+    std::atomic_bool isExit_;
     std::mutex mtx_;
     int resLimit_;
     std::condition_variable cond_;

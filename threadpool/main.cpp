@@ -1,6 +1,7 @@
 #include <iostream>
-#include "threadpool.h"
+#include "threadpool_new.h"
 #include <chrono>
+#include <future>
 
 /*
  * 多线程程序IO密集型和CPU密集型
@@ -15,6 +16,7 @@
 // 有些场景需要获取到线程的返回值
 // 计算数字和
 // c++17 Any 类型
+#ifdef s
 class MyTask : public Task{
 public:
     MyTask(int begin, int end): begin_(begin), end_(end) {
@@ -43,13 +45,25 @@ int main() {
     Result res1 = pool.subMitTask(std::make_shared<MyTask>(1, 100));
     Result res2 = pool.subMitTask(std::make_shared<MyTask>(1, 1000));
     Result res3 = pool.subMitTask(std::make_shared<MyTask>(1, 100));
+    // Result对象也被析构了, 在windows，条件变量析构会释放资源
 
-//    Result res4 = pool.subMitTask(std::make_shared<MyTask>(1, 1000));
+    return 0;
+}
+#endif
+/*
+ * submit实现可变参数编程
+ * thread库提供了 packaged_task(function函数对象) async
+ *
+ *
+ * */
+int sum1(int a, int b){
+    return a+b;
+}
+int main(){
+    ThreadPool pool;
+    pool.start(4);
+    std::future<int> res = pool.submitTask(sum1, 1, 2);
+    std::cout << "ans is: " << res.get()<< std::endl;
 
-    int sum1 = res1.get().cast_<int>();
-    int sum2 = res2.get().cast_<int>();
-    int sum3 = res3.get().cast_<int>();
-    std::cout << "ans is " << (sum1 + sum2 + sum3) << std::endl;
-    getchar();
     return 0;
 }
